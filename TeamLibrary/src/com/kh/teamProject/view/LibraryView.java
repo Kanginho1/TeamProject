@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.kh.teamProject.controller.BookController;
 import com.kh.teamProject.model.vo.Book;
+import com.kh.teamProject.model.vo.User;
 
 public class LibraryView {
 	
@@ -27,6 +28,7 @@ public class LibraryView {
 			bc.addBook(b);
 		}
 		
+		boolean login = false; // 핵심 역할 로그인 되어있다는걸 표시
 		while(true) {
 			System.out.println("(1)관리자 모드 (2)이용자 모드 (3)종료");
 			System.out.print("이용하실 모드의 번호를 입력하세요 : ");
@@ -63,7 +65,7 @@ public class LibraryView {
 						int bno = (int)(Math.random()*(10000-1000+1)+1000);	
 					for(Book b : bc.bList) {
 						if(b.getbNo() == bno) {
-							count++;			// 기존에 있는 도서코드와 겹치는게 있다면 증감하도록 설정
+							count++;			// 기전에 있는 도서코드와 겹치는게 있다면 증감하도록 설정
 							
 						}
 					}
@@ -111,6 +113,39 @@ public class LibraryView {
 					}
 				}else if(num2==4) {
 					
+					if (bList.isEmpty()) { // 존재하는 도서가 없을 때
+						System.out.println("현재 존재하는 도서가 없습니다.");
+						break;
+					} else {
+						System.out.println("***********도서 수정을 시작합니다.*******************");
+						System.out.print("수정을 원하는 도서 번호를 입력하세요 : ");
+						int bNo = sc.nextInt();
+						
+						sc.nextLine();
+						
+						System.out.print("도서 제목을 입력하세요 : ");
+						String bName = sc.nextLine();
+						
+						System.out.print("도서 지은이를 입력하세요 : ");
+						String bAut = sc.nextLine();
+						
+						System.out.print("도서 출판사를 입력하세요 : ");
+						String bPub = sc.nextLine();
+						
+						System.out.println("재고를 입력하세요 : ");
+						int remain = sc.nextInt();
+						
+						sc.nextLine();
+						
+						int result = bc.updateBook(bNo, bName, bAut, bPub, remain);
+						
+						if(result == 1) {
+							System.out.println("**********도서가 수정이 완료되었습니다.****************");
+						}else {
+							System.out.println("수정할 곡을 찾지 못했습니다.");
+						}
+				}
+					
 				}else if(num2==5) {
 					continue;
 				}else if(num2==6) {
@@ -125,15 +160,126 @@ public class LibraryView {
 				System.out.println("(1)회원가입 (2)로그인 (3)도서조회 (4)회원정보 수정 (5)대출 (6)반납 (7)뒤로가기 (8)종료");
 				System.out.print("원하시는 메뉴 번호를 선택하세요 : ");
 				int num3 = sc.nextInt();
+				sc.nextLine();
 				if(num3==1) {
-					
+					while(true) {
+					System.out.println("*************회원 가입을 시작합니다.********************");
+					System.out.print("ID를 입력하세요. : ");
+					String id = sc.nextLine();
+					System.out.print("비밀번호를 입력하세요 : ");
+					String pwd = sc.nextLine();
+					System.out.print("이름을 입력하세요 : ");
+					String uName = sc.nextLine();
+					System.out.print("나이를 입력하세요 : ");
+					int age = sc.nextInt();
+					sc.nextLine();
+					System.out.print("전화번호 입력하세요 : ");
+					String phone = sc.nextLine();
+					System.out.print("정보를 등록하시겠습니까(1.등록하기 2.다시 입력하기) : ");
+					int yn = sc.nextInt();
+					sc.nextLine();
+					if(yn==1) {
+						bc.addUser(new User(id, pwd, uName, age, phone));
+						
+						break;
+					}else if(yn==2) {
+						continue;
+					}else {
+						System.out.println("잘못 입력했습니다. 이전 화면으로 돌아갑니다.");
+						break;
+					}
+					}
 				}else if(num3==2) {
-					
+					if(login==true) {
+						System.out.println("현재 로그인 상태입니다.");
+						break;
+					}
+					System.out.println("*************로그인 화면입니다.***************************");
+					System.out.print("ID입력 : ");
+					String id = sc.nextLine();
+					System.out.print("비밀번호 입력 : ");
+					String pwd = sc.nextLine();
+					if(bc.uList.isEmpty()) {
+						System.out.println("아이디나 비밀번호가 잘못 되었습니다.");
+						break;
+					}
+					if(bc.user.get(id).equals(pwd)) {
+						System.out.println(id+"님 로그인 되었습니다.");
+						login = true;
+					}else {
+						System.out.println("아이디나 비밀번호가 잘못 되었습니다.");
+						break;
+					}
 				}else if(num3==3) {
-					
+					System.out.println("*************도서 조회를 시작합니다.********************");
+					System.out.println("(1)도서 번호로 검색 (2)도서 명으로 검색 (3)지은이로 검색 (4)출판사로 검색");
+					System.out.print("원하시는 모드를 선택하세요 : ");
+					int mode = sc.nextInt();
+					sc.nextLine();
+					int search = 0;
+					if(mode == 1) {
+					System.out.print("도서 번호를 입력하세요 : ");
+					int bno = sc.nextInt();
+					for(Book b:bc.bList) {
+						if(b.getbNo()==bno) {
+							System.out.println(b);
+							search ++;
+							break;
+						}
+					}
+					}else if(mode==2) {
+						System.out.print("도서명을 입력하세요 : ");
+						String bName = sc.nextLine();
+						for(Book b:bc.bList) {
+							if(b.getbName().equals(bName)) {
+								System.out.println(b);
+								search++;
+								break;
+							}
+						}
+					}else if(mode == 3) {
+						System.out.print("지은이를 입력하세요 : ");
+						String bAut = sc.nextLine();
+						for(Book b : bc.bList) {
+							if(b.getbAut().equals(bAut)) {
+								System.out.println(b);
+								search++;
+								break;
+							}
+						}
+					}else if(mode==4) {
+						System.out.print("출판사를 입력하세요 : ");
+						 String bPub = sc.nextLine();
+						 for(Book b : bc.bList) {
+							 if(b.getbPub().equals(bPub)) {
+								 System.out.println(b);
+								 search++;
+								 break;
+							 }
+						 }
+					}else {
+						System.out.println("잘못 입력했습니다. 이전 화면으로 돌아갑니다.");
+						 break;
+					}
+					if(search==0) {
+						 System.out.println("존재하지 않는 정보입니다.");
+					}
 				}else if(num3==4) {
 					
 				}else if(num3==5) {
+					if(login == false) {
+						System.out.println("로그인을 하고 이용해주세요"); // 로그인이 안되어있으면 접속이 불가하도록 설정했음!!!!! ******
+						break;
+					}
+					System.out.print("대여할 도서 번호를 입력하세요 : ");
+					int bno = sc.nextInt();
+					if(bc.bookLoan(bno)) {
+						System.out.println("대출 완료");
+					}else {
+						System.out.println("존재하지 않는 도서 번호거나, 남은 도서가 없습니다.");
+						break;
+					}
+				
 					
 				}else if(num3==6) {
 					
