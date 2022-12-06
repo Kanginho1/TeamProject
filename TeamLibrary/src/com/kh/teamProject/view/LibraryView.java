@@ -231,7 +231,7 @@ public class LibraryView {
 						System.out.print("도서명을 입력하세요 : ");
 						String bName = sc.nextLine();
 						for(Book b:bc.bList) {
-							if(b.getbName().equals(bName)) {
+							if(b.getbName().contains(bName)) {
 								System.out.println(b);
 								search++;
 								break;
@@ -241,7 +241,7 @@ public class LibraryView {
 						System.out.print("지은이를 입력하세요 : ");
 						String bAut = sc.nextLine();
 						for(Book b : bc.bList) {
-							if(b.getbAut().equals(bAut)) {
+							if(b.getbAut().contains(bAut)) {
 								System.out.println(b);
 								search++;
 								break;
@@ -251,7 +251,7 @@ public class LibraryView {
 						System.out.print("출판사를 입력하세요 : ");
 						 String bPub = sc.nextLine();
 						 for(Book b : bc.bList) {
-							 if(b.getbPub().equals(bPub)) {
+							 if(b.getbPub().contains(bPub)) {
 								 System.out.println(b);
 								 search++;
 								 break;
