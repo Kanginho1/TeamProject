@@ -26,13 +26,13 @@ public class LibraryView {
 		for (Book b : bList) {
 			bc.addBook(b);
 		}
+
 		boolean login = false; // 핵심 역할 로그인 되어있다는걸 표시
 		while (true) {
-			int back = 0;
 			System.out.println("(1)관리자 모드 (2)이용자 모드 (3)종료");
 			System.out.print("이용하실 모드의 번호를 입력하세요 : ");
 			int num = sc.nextInt();
-			while (back != 1) {
+			
 				switch (num) {
 				case 1: // 관리자 모드
 					System.out.println("*************관리자 모드 입니다.********************");
@@ -153,8 +153,7 @@ public class LibraryView {
 						}
 
 					} else if (num2 == 5) { // 1_5. 뒤로 가기
-					    back++;
-						break;
+						continue;
 					} else if (num2 == 6) { // 1_6. 종료
 						System.out.println("프로그램을 종료합니다.");
 						return;
@@ -170,6 +169,11 @@ public class LibraryView {
 					sc.nextLine();
 					if (num3 == 1) { // 2_1. 회원가입
 						while (true) {
+//							try {
+//								
+//							} catch (InputMismatchException i) {
+//								System.out.println("잘못 입력하셨습니다. 다시 입력해주세요.");
+//							}
 							System.out.println("*************회원 가입을 시작합니다.********************");
 							System.out.print("ID를 입력하세요. : ");
 							String id = sc.nextLine();
@@ -337,26 +341,28 @@ public class LibraryView {
 						}
 
 					} else if (num3 == 6) { // 2_6. 도서 반납
-						while (true) {
-							System.out.print("반납할 도서 번호를 입력하세요 : ");
-							int bNo = sc.nextInt();
-							sc.nextLine();
-
-							int result1 = bc.returnBook(bNo);
+						if (login == false) {
+							System.out.println("로그인을 하고 이용해주세요");
+						} else {
 							
-							if (result1 == 1) {
-								System.out.println("반납 완료");
-								int result2 = bc.returnBook2(bNo);
-								break;
-							} else {
-								System.out.println("도서번호를 잘못 입력하셨습니다. 다시 입력해주세요.");
-							}
+								System.out.print("반납할 도서 번호를 입력하세요 : ");
+								int bNo = sc.nextInt();
+								sc.nextLine();
+
+								int result1 = bc.returnBook(bNo);
+
+								if (result1 == 1) {
+									System.out.println("반납 완료");
+									int result2 = bc.returnBook2(bNo);
+									break;
+								} else {
+									System.out.println("도서번호를 잘못 입력하셨습니다. 다시 입력해주세요.");
+								}
+							
 						}
 
 					} else if (num3 == 7) { // 2_7. 뒤로가기
-						back++;
-						break;
-						
+						continue;
 					} else if (num3 == 8) { // 2_8. 종료
 						System.out.println("프로그램을 종료합니다.");
 						return;
@@ -370,8 +376,6 @@ public class LibraryView {
 				default:
 					System.out.println("잘못 입력했습니다.");
 				}
-			}
-			continue;
 		} 
 	}
 }

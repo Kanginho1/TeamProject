@@ -5,6 +5,7 @@ import java.util.Scanner;
 
 import com.kh.teamProject.controller.BookController;
 import com.kh.teamProject.model.vo.Book;
+import com.kh.teamProject.model.vo.RBook;
 import com.kh.teamProject.model.vo.User;
 
 public class LibraryView {
@@ -293,14 +294,14 @@ public class LibraryView {
 							System.out.print("비밀번호를 입력하세요 : ");
 							String pwd1 = sc.nextLine();
 
-							boolean find = bc.modifyUser(id, pwd1);
+							int find = bc.modifyUser(id, pwd1);
 
-							if (find == true) {
+							if (find == 1) {
 								System.out.println("회원님의 회원정보 수정페이지 입니다.");
 							}
-							if(find == false){
+							if(find == 2){
 								System.out.println("없는 회원이거나 잘못 입력하셨습니다. 다시 입력해주세요.");
-								continue;
+								return;
 							}
 					
 							System.out.print("비밀번호를 수정하세요 : ");
@@ -317,9 +318,12 @@ public class LibraryView {
 							String phone = sc.nextLine();
 
 							int result = bc.updateUser(id, pwd, uName, age, phone);
-
-							System.out.println("수정이 완료되었습니다.");
-							break;
+							
+							if(result == 1) {
+								
+								System.out.println("수정이 완료되었습니다.");
+								break;
+							}
 						}
 
 					} else if (num3 == 5) { // 2_5. 도서 대출
@@ -327,6 +331,7 @@ public class LibraryView {
 							System.out.println("로그인을 하고 이용해주세요"); // 로그인이 안되어있으면 접속이 불가하도록 설정했음!!!!! ******
 							break;
 						}
+
 						System.out.print("대여할 도서 번호를 입력하세요 : ");
 						int bno = sc.nextInt();
 						if (bc.bookLoan(bno)) {
@@ -337,20 +342,28 @@ public class LibraryView {
 						}
 
 					} else if (num3 == 6) { // 2_6. 도서 반납
-						while (true) {
-							System.out.print("반납할 도서 번호를 입력하세요 : ");
-							int bNo = sc.nextInt();
-							sc.nextLine();
-
-							int result1 = bc.returnBook(bNo);
+						if (login == false) {
+							System.out.println("로그인을 하고 이용해주세요");
+							break;
+						}
+						ArrayList<RBook> rList = bc.getAllRentBook();
+						
 							
-							if (result1 == 1) {
-								System.out.println("반납 완료");
-								int result2 = bc.returnBook2(bNo);
-								break;
-							} else {
-								System.out.println("도서번호를 잘못 입력하셨습니다. 다시 입력해주세요.");
-							}
+							System.out.println(rList); //출력
+						
+						System.out.print("반납할 도서 번호를 입력하세요 : ");
+						int bNo = sc.nextInt();
+						sc.nextLine();
+
+						int result1 = bc.returnBook(bNo);
+
+						if (result1 == 1) {
+							System.out.println("반납 완료");
+							int result2 = bc.returnBook2(bNo);
+							break;
+						} else if(result1 == 2){
+							System.out.println("현재 대출하신 책이 없습니다.");
+
 						}
 
 					} else if (num3 == 7) { // 2_7. 뒤로가기
