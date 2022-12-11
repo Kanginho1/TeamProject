@@ -38,8 +38,7 @@ public class BookController implements  BookManager{
 		bList.remove(dBook);
 	}
 	
-	@Override
-	public int updateBook(int bNo, String bName, String bAut, String bPub, int remain) {
+	public int updateBook(int bNo, String bName, String bAut, String bPub, int remain) { // 1-4번
 		int result = 0;
 
 		for (int i = 0; i < bList.size(); i++) {
@@ -54,6 +53,7 @@ public class BookController implements  BookManager{
 		}
 		return result;
 	}
+
 
 	@Override
 	public void addUser(User nUser) { // 2-1번
@@ -76,6 +76,43 @@ public class BookController implements  BookManager{
 			System.out.println("************************************");
 		}
 	}
+	
+	@Override
+	public ArrayList<User> getAllUser() { // 2_4 회원정보에 등록된 회원유무 확인할 때를 위한 메소드
+		return uList;
+	}
+
+	@Override
+	public boolean modifyUser(String id, String pwd1) { // 2_4번
+		boolean find = false;
+		for (User u : uList) {
+			if (id.equals(u.getId())) {
+				if (pwd1.equals(u.getPwd())) {
+					find = true;
+					break;
+				}
+			}
+
+		}
+		return find;
+	}
+
+	@Override
+	public int updateUser(String id, String pwd, String uName, int age, String phone) { // 2-4번
+		int result = 0;
+
+		for (int i = 0; i < uList.size(); i++) {
+			if (uList.get(i).getId().equals(id)) {
+				uList.get(i).setPwd(pwd);
+				uList.get(i).setuName(uName);
+				uList.get(i).setAge(age);
+				uList.get(i).setPhone(phone);
+				result = 1;
+				break;
+			}
+		}
+		return result;
+	}
 
 	@Override
 	public boolean bookLoan(int bno) { // 2-5번
@@ -90,18 +127,36 @@ public class BookController implements  BookManager{
 			}
 			}
 		}
-		
 		return flag;
 		
 	}
 
+	@Override
+	public int returnBook(int bNo) { // 2_6번 반납할 도서번호가 맞으면 반납완료
+		int result1 = 0;
+		
+		for(int i=0;i<bList.size();i++) {
+			if(bList.get(i).getbNo()==bNo)
+				result1 = 1;
+				break;
+		}
+		return result1;
+	}
 	
-
-
-
-
-	
+	@Override
+	public int returnBook2(int bNo) { // 2_6번 도서 반납 후 재고에 다시 수량 추가
+		int result2 = 0;
+		for (Book b : bList) {
+			if (b.getbNo() == bNo) {
+				b.setRemain(b.getRemain() + 1);
+				break;
+			}
+		}
+		return result2;
+	}
 }
+	
+
 
 /*
  * 다 반환하는 값을 가진 메소드로 제작
